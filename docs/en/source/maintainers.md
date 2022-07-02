@@ -1,5 +1,4 @@
 ## Matintainers
 
-- Germey
-  - Blog：[https://cuiqingcai.com/](https://cuiqingcai.com/)
-  - GitHub：[https://github.com/Germey](https://github.com/Germey)
+- YesCaptcha
+  - Home：[https://yescaptcha.com/](https://yescaptcha.com/)
