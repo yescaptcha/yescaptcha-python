@@ -17,7 +17,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Docker" href="docker.html" />
+    <link rel="next" title="Matintainers" href="maintainers.html" />
     <link rel="prev" title="Installation" href="installation.html" /> 
 </head>
 
@@ -40,17 +40,15 @@
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#initialization">Initialization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#database-configuration">Database Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#new-user">New User</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#startup-service">Startup service</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#host-management">Host Management</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#project-management">Project management</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#timing-tasks">Timing tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#preconditions">Preconditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#all-task-types">All task types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#basic-usage">Basic usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#other-tasks">other tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#async-tasks">async tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#non-task-interface">non-task interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#node-settings">Node settings</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="docker.html">Docker</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="maintainers.html">Maintainers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 </ul>
@@ -105,122 +103,116 @@
 </style>
 <div class="section" id="usage">
 <h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
-<p>This article focuses on the basic use of Gerapy and hopes to provide some help for you who are using Gerapy.</p>
-<div class="section" id="initialization">
-<h2>Initialization<a class="headerlink" href="#initialization" title="Permalink to this headline">¶</a></h2>
-<p>First you can create a new project with the gerapy command. The command is as follows:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gerapy</span> <span class="n">init</span>
+<p>This document describes the basic usage of YesCaptcha SDK.</p>
+<div class="section" id="preconditions">
+<h2>Preconditions<a class="headerlink" href="#preconditions" title="Permalink to this headline">¶</a></h2>
+<p>Before using, please go to <a class="reference external" href="https://yescaptcha.com/">https://yescaptcha.com/</a> official website to register an account, and obtain the account key ClientKey, as shown in the figure:</p>
+<p><img alt="https://qiniu.cuiqingcai.com/d2h50.png" src="https://qiniu.cuiqingcai.com/d2h50.png" /></p>
+</div>
+<div class="section" id="all-task-types">
+<h2>All task types<a class="headerlink" href="#all-task-types" title="Permalink to this headline">¶</a></h2>
+<p>YesCaptcha provides a variety of verification code recognition services, each service corresponds to a task, all task types refer to <a class="reference external" href="https://yescaptcha.atlassian.net/wiki/spaces/YESCAPTCHA/pages/164286">official document</a>.</p>
+<p>This Python SDK provides the encapsulation of various tasks, making it easier for developers to interface with YesCaptcha services, instead of using libraries such as requests for development from 0.</p>
+</div>
+<div class="section" id="basic-usage">
+<h2>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
+<p>Here we take the GoogleCaptchaV2 verification code as an example, the sample address is <a class="reference external" href="https://www.google.com/recaptcha/api2/demo">https://www.google.com/recaptcha/api2/demo</a>, the specific For usage instructions, see <a class="reference external" href="https://yescaptcha.atlassian.net/wiki/spaces/YESCAPTCHA/pages/229796/NoCaptchaTaskProxyless+reCaptcha+V2">NoCaptchaTaskProxyless : reCaptcha V2 protocol interface</a>.</p>
+<p>The sample code is as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">yescaptcha.task</span> <span class="kn">import</span> <span class="n">NoCaptchaTaskProxyless</span>
+<span class="kn">from</span> <span class="nn">yescaptcha.client</span> <span class="kn">import</span> <span class="n">Client</span>
+
+<span class="n">CLIENT_KEY</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">YOUR_CLIENT_KEY</span><span class="o">&gt;</span>
+<span class="n">website_url</span> <span class="o">=</span> <span class="s1">&#39;https://www.google.com/recaptcha/api2/demo&#39;</span>
+<span class="n">website_key</span> <span class="o">=</span> <span class="s1">&#39;6Le-wvkSAAAAAPBMRTvw0Q4Muexq9bi0DJwx_mJ-&#39;</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">client_key</span><span class="o">=</span><span class="n">CLIENT_KEY</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">task</span> <span class="o">=</span> <span class="n">NoCaptchaTaskProxyless</span><span class="p">(</span><span class="n">website_key</span><span class="o">=</span><span class="n">website_key</span><span class="p">,</span> <span class="n">website_url</span><span class="o">=</span><span class="n">website_url</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="n">job</span><span class="o">.</span><span class="n">get_solution</span><span class="p">())</span>
 </pre></div>
 </div>
-<p>This will generate a gerapy folder in the current directory. This gerapy folder is the working directory of Gerapy. When you enter the gerapy folder, you will find two folders:</p>
+<p>First, we need to introduce the <code class="docutils literal notranslate"><span class="pre">Client</span></code> class to initialize an operation object of the YesCaptcha service. At this time, we need to pass in the <code class="docutils literal notranslate"><span class="pre">client_key</span></code>, which is the account key ClientKey described above. In addition, we can pass in the <code class="docutils literal notranslate"><span class="pre">debug</span></code> parameter, Set the debug mode so that more debug information can be output during operation.</p>
+<p>In addition, the <code class="docutils literal notranslate"><span class="pre">NoCaptchaTaskProxyless</span></code> class needs to be introduced. The name of the class is equivalent to the type mentioned in the document, as shown in the figure:</p>
+<p><img alt="https://qiniu.cuiqingcai.com/67cfb.png" src="https://qiniu.cuiqingcai.com/67cfb.png" /></p>
+<p>In addition, reading the documentation we can find that this category of Task requires two parameters <code class="docutils literal notranslate"><span class="pre">websiteURL</span></code> and <code class="docutils literal notranslate"><span class="pre">websiteKey</span></code>, as shown:</p>
+<p><img alt="https://qiniu.cuiqingcai.com/ldq5d.png" src="https://qiniu.cuiqingcai.com/ldq5d.png" /></p>
+<p>Therefore, when initializing the <code class="docutils literal notranslate"><span class="pre">NoCaptchaTaskProxyless</span></code> class, we need to pass in the corresponding two parameters, the parameters need to be converted to <a class="reference external" href="https://en.wikipedia.org/wiki/Snake_case">Snake nomenclature</a>, the difference between word and word need to be separated by an underscore, that is, converted to <code class="docutils literal notranslate"><span class="pre">website_url</span></code> and <code class="docutils literal notranslate"><span class="pre">website_key</span></code>.</p>
+<p>Next, we can use the <code class="docutils literal notranslate"><span class="pre">create_task</span></code> method of the client object to create a task whose return value is named <code class="docutils literal notranslate"><span class="pre">job</span></code>, and finally, we call the <code class="docutils literal notranslate"><span class="pre">get_solution</span></code> method to get the corresponding result.</p>
+<p>The results are as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2022</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">02</span> <span class="mi">14</span><span class="p">:</span><span class="mi">30</span><span class="p">:</span><span class="mf">38.124</span> <span class="o">|</span> <span class="n">DEBUG</span> <span class="o">|</span> <span class="n">yescaptcha</span><span class="o">.</span><span class="n">client</span><span class="p">:</span><span class="n">create_task</span><span class="p">:</span><span class="mi">61</span> <span class="o">-</span> <span class="n">construct</span> <span class="n">result</span> <span class="p">{</span><span class="s1">&#39;clientKey&#39;</span><span class="p">:</span> <span class="s1">&#39;50a07aa563cf4688270a6a968086c80b4ef23baf78&#39;</span><span class="p">,</span> <span class="s1">&#39;task&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;NoCaptchaTaskProxyless&#39;</span><span class="p">,</span> <span class="s1">&#39;websiteURL&#39;</span><span class="p">:</span> <span class="s1">&#39; https://www.google.com/recaptcha/api2/demo&#39;</span><span class="p">,</span> <span class="s1">&#39;websiteKey&#39;</span><span class="p">:</span> <span class="s1">&#39;6Le-wvkSAAAAAPBMRTvw0Q4Muexq9bi0DJwx_mJ-&#39;</span><span class="p">}}</span>
+<span class="mi">2022</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">02</span> <span class="mi">14</span><span class="p">:</span><span class="mi">30</span><span class="p">:</span><span class="mf">39.435</span> <span class="o">|</span> <span class="n">DEBUG</span> <span class="o">|</span> <span class="n">yescaptcha</span><span class="o">.</span><span class="n">job</span><span class="p">:</span><span class="n">_update</span><span class="p">:</span><span class="mi">34</span> <span class="o">-</span> <span class="k">try</span> <span class="n">to</span> <span class="n">get</span> <span class="n">result</span> <span class="n">of</span> <span class="n">task</span> <span class="mi">7</span><span class="n">cf17d74</span><span class="o">-</span><span class="n">f9d0</span><span class="o">-</span><span class="mi">11</span><span class="n">ec</span><span class="o">-</span><span class="n">b008</span><span class="o">-</span><span class="n">ae8dd81878b9</span>
+<span class="mi">2022</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">02</span> <span class="mi">14</span><span class="p">:</span><span class="mi">30</span><span class="p">:</span><span class="mf">40.527</span> <span class="o">|</span> <span class="n">DEBUG</span> <span class="o">|</span> <span class="n">yescaptcha</span><span class="o">.</span><span class="n">job</span><span class="p">:</span><span class="n">_update</span><span class="p">:</span><span class="mi">36</span> <span class="o">-</span> <span class="n">task</span> <span class="n">result</span> <span class="p">{</span><span class="s1">&#39;errorId&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;errorCode&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;errorDescription&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;processing&#39;</span> <span class="p">,</span> <span class="s1">&#39;solution&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+<span class="mi">2022</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">02</span> <span class="mi">14</span><span class="p">:</span><span class="mi">30</span><span class="p">:</span><span class="mf">41.528</span> <span class="o">|</span> <span class="n">DEBUG</span> <span class="o">|</span> <span class="n">yescaptcha</span><span class="o">.</span><span class="n">job</span><span class="p">:</span><span class="n">_update</span><span class="p">:</span><span class="mi">34</span> <span class="o">-</span> <span class="k">try</span> <span class="n">to</span> <span class="n">get</span> <span class="n">result</span> <span class="n">of</span> <span class="n">task</span> <span class="mi">7</span><span class="n">cf17d74</span><span class="o">-</span><span class="n">f9d0</span><span class="o">-</span><span class="mi">11</span><span class="n">ec</span><span class="o">-</span><span class="n">b008</span><span class="o">-</span><span class="n">ae8dd81878b9</span>
+
+<span class="mi">2022</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">02</span> <span class="mi">14</span><span class="p">:</span><span class="mi">31</span><span class="p">:</span><span class="mf">36.359</span> <span class="o">|</span> <span class="n">DEBUG</span> <span class="o">|</span> <span class="n">yescaptcha</span><span class="o">.</span><span class="n">job</span><span class="p">:</span><span class="n">_update</span><span class="p">:</span><span class="mi">36</span> <span class="o">-</span> <span class="n">task</span> <span class="n">result</span> <span class="p">{</span><span class="s1">&#39;errorId&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;errorCode&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;errorDescription&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;solution&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;gRecaptchaResponse&#39;</span> <span class="p">:</span> <span class="s1">&#39;03AGdBq27gCf7UkBFO7Nsl5OqK6kiL911UYPYSyrbbYh9jQfvzp1qrsehq62UKgJ...2SNtTnWFJJ8TkXJs4AHIceSmE-JR8BSs_m--Qf5MtySwRPZnYewbKBOSOSHBCQarMPBFUj-dscgbI8rlfIpbG0hbgrF-MDJ3aHI6ZdgrahHtlRpB6PWDdWCXX1S1w&#39;</span><span class="p">}</span>
+<span class="n">result</span> <span class="mi">03</span><span class="n">AGdBq27gCf7UkBFO7Nsl5OqK6kiL911UYPYSyrbbYh9jQfvzp1qrsehq62UKgJB9s9x5bKk2pEg392DYy3HVTo1KbdBywk7UQK3RDcM1A4bGPByrCO0xlgMyX4GzDqvx</span><span class="o">...</span><span class="n">HBCQarMPBFUj</span><span class="o">-</span><span class="n">dscgbI8rlfIpbG0hbgrF</span><span class="o">-</span><span class="n">MDJ3aHI6ZdgrahHtlRpB6PWDdWCXX1S1w</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="other-tasks">
+<h2>other tasks<a class="headerlink" href="#other-tasks" title="Permalink to this headline">¶</a></h2>
+<p>For other tasks, the usage method is similar, we only need to refer to the document and introduce the corresponding Task object, for example, for [ReCaptchaV2Classification: reCaptcha V2 Image Recognition](https://yescaptcha.atlassian.net/wiki/spaces/YESCAPTCHA /pages/18055169/ReCaptchaV2Classification+reCaptcha+V2), all we need to introduce is:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">yescaptcha.task</span> <span class="kn">import</span> <span class="n">ReCaptchaV2Classification</span>
+</pre></div>
+</div>
+<p>When creating a Task, also refer to the parameter description of the documentation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">task</span> <span class="o">=</span> <span class="n">ReCaptchaV2Classification</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="s1">&#39;&lt;image payload&gt;&#39;</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="s1">&#39;&lt;question&gt;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The image here is the Base64 encoded image, do not include “data:image/***;base64,”, the question parameter is the question ID, please check the table, start with /m/.</p>
+<p>The final call is the same:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">job</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="n">job</span><span class="o">.</span><span class="n">get_solution</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="async-tasks">
+<h2>async tasks<a class="headerlink" href="#async-tasks" title="Permalink to this headline">¶</a></h2>
+<p>For some tasks, the recognition result of the verification code will not be returned immediately, but a processing process is required, such as tasks such as NoCaptchaTaskProxyless and RecaptchaV3TaskProxyless. For some image recognition tasks, the recognition process will be synchronous, such as ReCaptchaV2Classification, HCaptchaClassification and other tasks.</p>
+<p>In order to facilitate the development of developers, for asynchronous tasks, this SDK does automatic waiting processing, that is, it will automatically poll and wait until the recognition result is returned. The reason is that when initializing the Client object, there is a default parameter <code class="docutils literal notranslate"><span class="pre">auto_join</span></code> that is True .</p>
+<p>Therefore, if you do not want to enable automatic waiting, you can handle this process manually. In this case, you need to set <code class="docutils literal notranslate"><span class="pre">auto_join</span></code> to False when initializing the Client object, and then call the <code class="docutils literal notranslate"><span class="pre">join</span></code> method of the <code class="docutils literal notranslate"><span class="pre">job</span></code> object when appropriate. as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">yescaptcha.task</span> <span class="kn">import</span> <span class="n">NoCaptchaTaskProxyless</span>
+<span class="kn">from</span> <span class="nn">yescaptcha.client</span> <span class="kn">import</span> <span class="n">Client</span>
+
+<span class="n">CLIENT_KEY</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">YOUR_CLIENT_KEY</span><span class="o">&gt;</span>
+<span class="n">website_url</span> <span class="o">=</span> <span class="s1">&#39;https://www.google.com/recaptcha/api2/demo&#39;</span>
+<span class="n">website_key</span> <span class="o">=</span> <span class="s1">&#39;6Le-wvkSAAAAAPBMRTvw0Q4Muexq9bi0DJwx_mJ-&#39;</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">client_key</span><span class="o">=</span><span class="n">CLIENT_KEY</span><span class="p">,</span> <span class="n">auto_join</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">task</span> <span class="o">=</span> <span class="n">NoCaptchaTaskProxyless</span><span class="p">(</span><span class="n">website_key</span><span class="o">=</span><span class="n">website_key</span><span class="p">,</span> <span class="n">website_url</span><span class="o">=</span><span class="n">website_url</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+<span class="n">job</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="n">job</span><span class="o">.</span><span class="n">get_solution</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="non-task-interface">
+<h2>non-task interface<a class="headerlink" href="#non-task-interface" title="Permalink to this headline">¶</a></h2>
+<p>In addition, this SDK also provides some interfaces that are not identified by verification codes, such as obtaining account information, obtaining developer ID, etc., which are listed as follows:</p>
 <ul class="simple">
-<li><p>projects , which are used to store Scrapy crawler projects.</p></li>
-<li><p>logs, used to store the Gerapy run log.</p></li>
+<li><p>get_balance: Get account balance</p></li>
+<li><p>get_soft_id: Get the developer ID</p></li>
 </ul>
-<p>If you want to change the name of the working directory, you can add the name of the working directory after the command. If you want to create a working directory named GerapySpace, you can create it with the following command:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gerapy</span> <span class="n">init</span> <span class="n">GerapySpace</span>
+<p>For example, for get_soft_id, the usage is as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">yescaptcha.client</span> <span class="kn">import</span> <span class="n">Client</span>
+
+<span class="n">CLIENT_KEY</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">YOUR_CLIENT_KEY</span><span class="o">&gt;</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">client_key</span><span class="o">=</span><span class="n">CLIENT_KEY</span><span class="p">)</span>
+<span class="n">soft_id</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_soft_id</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="n">soft_id</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Its internal structure is the same.</p>
 </div>
-<div class="section" id="database-configuration">
-<h2>Database Configuration<a class="headerlink" href="#database-configuration" title="Permalink to this headline">¶</a></h2>
-<p>Gerapy uses the database to store various project configurations, timing tasks, etc., so the second step is to initialize the database.</p>
-<p>First enter the working directory, for example, the working directory name is gerapy, execute the following command:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">gerapy</span>
+<div class="section" id="node-settings">
+<h2>Node settings<a class="headerlink" href="#node-settings" title="Permalink to this headline">¶</a></h2>
+<p>There are two service nodes behind the YesCaptcha service, one is an international node (default), but there may be problems accessing it in China, so for users in China, you can set up a dedicated Chinese node.</p>
+<p>When setting, you only need to change the initialization parameter <code class="docutils literal notranslate"><span class="pre">region</span></code> of the Client object:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">yescaptcha.client</span> <span class="kn">import</span> <span class="n">Client</span><span class="p">,</span> <span class="n">Region</span>
+
+<span class="n">CLIENT_KEY</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">YOUR_CLIENT_KEY</span><span class="o">&gt;</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">client_key</span><span class="o">=</span><span class="n">CLIENT_KEY</span><span class="p">,</span> <span class="n">region</span><span class="o">=</span><span class="n">Region</span><span class="o">.</span><span class="n">CHINA</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>At this point, first initialize the database, execute the following command:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gerapy</span> <span class="n">migrate</span>
-</pre></div>
-</div>
-<p>This will generate a SQLite database, which will be used to save each host configuration information, deployment version, timing tasks, and so on.</p>
-<p>At this time, you can find another folder in the working directory:</p>
-<ul class="simple">
-<li><p>dbs, which is used to store the database required by the Gerapy runtime.</p></li>
-</ul>
-</div>
-<div class="section" id="new-user">
-<h2>New User<a class="headerlink" href="#new-user" title="Permalink to this headline">¶</a></h2>
-<p>Gerapy has login authentication turned on by default, so you need to set up an admin user before starting the service.</p>
-<p>For convenience, you can quickly create an admin administrator by directly using the command of the initial administrator. The password is also admin. The command is as follows:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gerapy</span> <span class="n">initadmin</span>
-</pre></div>
-</div>
-<p>If you do not want to create the admin user directly, you can also manually create an administrator user with the following command:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gerapy</span> <span class="n">createsuperuser</span>
-</pre></div>
-</div>
-<p>At this point Gerapy will prompt us to enter the username, email, password, etc., and then log in to Gerapy with this user.</p>
-</div>
-<div class="section" id="startup-service">
-<h2>Startup service<a class="headerlink" href="#startup-service" title="Permalink to this headline">¶</a></h2>
-<p>Next start the Gerapy service, the command is as follows:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gerapy</span> <span class="n">runserver</span>
-</pre></div>
-</div>
-<p>This will open the Gerapy service on the default 8000 port.</p>
-<p>At this time, open <a class="reference external" href="http://localhost:8000">http://localhost:8000</a> in the browser to enter Gerapy.</p>
-<p>First Gerapy will prompt the user to log in, the page is as follows:</p>
-<p><img alt="https://qiniu.cuiqingcai.com/2019-11-23-040248.png" src="https://qiniu.cuiqingcai.com/2019-11-23-040248.png" /></p>
-<p>Enter Gerapy’s home page by entering the username and password you created in the previous step:</p>
-<p><img alt="https://qiniu.cuiqingcai.com/2019-11-23-065223.png" src="https://qiniu.cuiqingcai.com/2019-11-23-065223.png" /></p>
-<p>If you want Gerapy run in public, you can specify host and port like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gerapy</span> <span class="n">runserver</span> <span class="mf">0.0.0.0</span><span class="p">:</span><span class="mi">8000</span>
-</pre></div>
-</div>
-<p>Then Gerapy can be accessed through 8000 port from public.</p>
-<p>If you want Gerapy run in daemon, you can just run like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gerapy</span> <span class="n">runserver</span> <span class="mf">0.0.0.0</span><span class="p">:</span><span class="mi">8000</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span> <span class="o">&amp;</span>
-</pre></div>
-</div>
-<p>Then Gerapy will run in daemon and in public.</p>
-</div>
-<div class="section" id="host-management">
-<h2>Host Management<a class="headerlink" href="#host-management" title="Permalink to this headline">¶</a></h2>
-<p>Here the host is talking about Scrapyd’s service host. Scrapyd will run on port 6800 by default. It provides a series of HTTP services such as deployment and operation. For Scrapyd, you can refer to <a class="reference external" href="https://scrapyd.readthedocs.io/">Scrapyd Document</a> to ensure that their services can be accessed externally.</p>
-<p>In host management, we can add the Scrapyd running address and port of each host and name it. After adding it, it will appear in the host list. Gerapy will monitor the running status of each host and identify it in different states:</p>
-<p><img alt="https://qiniu.cuiqingcai.com/2019-11-23-070132.png" src="https://qiniu.cuiqingcai.com/2019-11-23-070132.png" /></p>
-<p>Once added, we can easily view and control the crawler tasks that each host is running.</p>
-</div>
-<div class="section" id="project-management">
-<h2>Project management<a class="headerlink" href="#project-management" title="Permalink to this headline">¶</a></h2>
-<p>Also mentioned above is an empty projects folder in Gerapy’s working directory, which is the folder where the Scrapy directory is stored.</p>
-<p>If we want to deploy a Scrapy project, just put the project file in the projects folder.</p>
-<p>For example, you can put your project into the projects folder as follows:</p>
-<ul class="simple">
-<li><p>Move or copy the local Scrapy project directly to the projects folder.</p></li>
-<li><p>Clone or download a remote project, such as Git Clone, and download the project to the projects folder.</p></li>
-<li><p>Link the project to the projects folder via a soft connection (using the ln command under Linux, Mac, using the mklink command).</p></li>
-</ul>
-<p>For example, put two Scrapy projects in the projects here:</p>
-<p><img alt="https://qiniu.cuiqingcai.com/2019-11-23-043941.png" src="https://qiniu.cuiqingcai.com/2019-11-23-043941.png" /></p>
-<p>Then go back to the Gerapy management interface and click on Project Management to see the current project list:</p>
-<p><img alt="https://qiniu.cuiqingcai.com/2019-11-23-070213.png" src="https://qiniu.cuiqingcai.com/2019-11-23-070213.png" /></p>
-<p>Since the project has a package and deployment record here, it is shown separately here.</p>
-<p>In addition, Gerapy provides the project online editing function, we can edit the project visually by clicking Edit:</p>
-<p><img alt="https://qiniu.cuiqingcai.com/2019-11-23-070248.png" src="https://qiniu.cuiqingcai.com/2019-11-23-070248.png" /></p>
-<p>If the project has no problems, you can click on the deployment to package and deploy. You need to package the project before deployment. You can specify the version description when packaging:</p>
-<p><img alt="https://qiniu.cuiqingcai.com/2019-11-23-070321.png" src="https://qiniu.cuiqingcai.com/2019-11-23-070321.png" /></p>
-<p>After the package is complete, you can click the deployment button to deploy the packaged Scrapy project to the corresponding cloud host, and you can also deploy it in batches.</p>
-<p><img alt="https://qiniu.cuiqingcai.com/2019-11-23-070339.png" src="https://qiniu.cuiqingcai.com/2019-11-23-070339.png" /></p>
-<p>After the deployment is complete, you can go back to the host management page to schedule the task. Click Schedule to view the task management page. You can view the running status of all tasks on the current host:</p>
-<p><img alt="https://qiniu.cuiqingcai.com/2019-11-23-070453.png" src="https://qiniu.cuiqingcai.com/2019-11-23-070453.png" /></p>
-<p>We can start and stop the task by clicking the button such as run, stop, etc., and also can view the log details by expanding the task entry.</p>
-<p>This way we can see the status of each task in real time.</p>
-</div>
-<div class="section" id="timing-tasks">
-<h2>Timing tasks<a class="headerlink" href="#timing-tasks" title="Permalink to this headline">¶</a></h2>
-<p>In addition, Gerapy supports setting up scheduled tasks, entering the Task Management page, and creating a new scheduled task, such as creating a new crontab mode, which runs every minute:</p>
-<p><img alt="https://qiniu.cuiqingcai.com/2019-11-23-144227.png" src="https://qiniu.cuiqingcai.com/2019-11-23-144227.png" /></p>
-<p>Here, if you set the run every minute, you can set the “minute” to 1, and you can set the start date and end date.</p>
-<p>After the creation is complete, return to the Task Management home page to see the list of scheduled tasks that have been created:</p>
-<p><img alt="https://qiniu.cuiqingcai.com/2019-11-23-070627.png" src="https://qiniu.cuiqingcai.com/2019-11-23-070627.png" /></p>
-<p>Click “Status” to view the running status of the current task:</p>
-<p><img alt="https://qiniu.cuiqingcai.com/2019-11-23-070716.png" src="https://qiniu.cuiqingcai.com/2019-11-23-070716.png" /></p>
-<p>You can also manually control scheduled tasks and view the run log by clicking the Schedule button in the upper right corner.</p>
-<p>The above is the basic usage of Gerapy.</p>
-<p>If you have found an error, or if you have any suggestions for Gerapy, please feel free to post it to <a class="reference external" href="https://github.com/Gerapy/Gerapy/issues">Gerapy Issues</a> and thank you for your support. Your feedback and suggestions are invaluable and hope that your participation will help Gerapy do better.</p>
 </div>
 </div>
 
@@ -229,7 +221,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="docker.html" class="btn btn-neutral float-right" title="Docker" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="maintainers.html" class="btn btn-neutral float-right" title="Matintainers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

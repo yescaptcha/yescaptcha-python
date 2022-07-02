@@ -38,10 +38,13 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#preparation">Preparation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pip3-install">pip3 install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#verify-installation">Verify installation</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="docker.html">Docker</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="maintainers.html">Maintainers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 </ul>
@@ -96,38 +99,26 @@
 </style>
 <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<p>Gerapy supports Python 3.x and does not support Python 2.</p>
-<p>Installation command:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="n">gerapy</span>
+<p>This article describes how to install the YesCaptcha Python SDK.</p>
+<div class="section" id="preparation">
+<h2>Preparation<a class="headerlink" href="#preparation" title="Permalink to this headline">¶</a></h2>
+<p>Before this, please make sure that the Python3 environment has been installed correctly and the pip3 command can be used normally. For details, please refer to: <a class="reference external" href="https://setup.scrape.center/python">Installation Instructions</a>.</p>
+</div>
+<div class="section" id="pip3-install">
+<h2>pip3 install<a class="headerlink" href="#pip3-install" title="Permalink to this headline">¶</a></h2>
+<p>After installing the Python3 environment, we can use pip3 to install yescaptcha-python with the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="n">yescaptcha</span>
 </pre></div>
 </div>
-<p>The gerapy command can be called directly after the installation is complete:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gerapy</span>
+</div>
+<div class="section" id="verify-installation">
+<h2>Verify installation<a class="headerlink" href="#verify-installation" title="Permalink to this headline">¶</a></h2>
+<p>Once installed, try running the following code in Python:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">yescaptcha.client</span> <span class="kn">import</span> <span class="n">Client</span>
 </pre></div>
 </div>
-<p>If it prints like this, the installation is successful:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">gerapy</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">...</span>
-
-<span class="n">Gerapy</span> <span class="mf">0.9.1</span> <span class="o">-</span> <span class="n">Distributed</span> <span class="n">Crawler</span> <span class="n">Management</span> <span class="n">Framework</span>
-
-<span class="n">Optional</span> <span class="n">arguments</span><span class="p">:</span>
-  <span class="o">-</span><span class="n">v</span><span class="p">,</span> <span class="o">--</span><span class="n">version</span> <span class="n">Get</span> <span class="n">version</span> <span class="n">of</span> <span class="n">Gerapy</span>
-  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span> <span class="n">Show</span> <span class="n">this</span> <span class="n">help</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span>
-
-<span class="n">Available</span> <span class="n">commands</span><span class="p">:</span>
-    <span class="n">Init</span> <span class="n">Init</span> <span class="n">workspace</span><span class="p">,</span> <span class="n">default</span> <span class="n">to</span> <span class="n">gerapy</span>
-    <span class="n">Initadmin</span> <span class="n">Create</span> <span class="n">default</span> <span class="nb">super</span> <span class="n">user</span> <span class="n">admin</span>
-    <span class="n">Runserver</span> <span class="n">Start</span> <span class="n">Gerapy</span> <span class="n">server</span>
-    <span class="n">Migrate</span> <span class="n">Migrate</span> <span class="n">database</span>
-    <span class="n">Createsuperuser</span> <span class="n">Create</span> <span class="n">a</span> <span class="n">custom</span> <span class="n">superuser</span>
-    <span class="n">Makemigrations</span> <span class="n">Generate</span> <span class="n">migrations</span> <span class="k">for</span> <span class="n">database</span>
-    <span class="n">Generate</span> <span class="n">Generate</span> <span class="n">Scrapy</span> <span class="n">code</span> <span class="k">for</span> <span class="n">configurable</span> <span class="n">project</span>
-    <span class="n">Parse</span> <span class="n">parse</span> <span class="n">project</span> <span class="k">for</span> <span class="n">debugging</span>
-    <span class="n">Loaddata</span> <span class="n">Load</span> <span class="n">data</span> <span class="kn">from</span> <span class="nn">configs</span>
-    <span class="n">Dumpdata</span> <span class="n">Dump</span> <span class="n">data</span> <span class="n">to</span> <span class="n">configs</span>
-</pre></div>
+<p>If no error occurs, it means that the relevant SDK has been installed successfully.</p>
 </div>
-<p>If an error occurs, please go to <a class="reference external" href="https://github.com/Gerapy/Gerapy/issues">Gerapy Issues</a> to search for a solution or issue a question, thank you for your support.</p>
 </div>
 
 

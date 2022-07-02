@@ -1,4 +1,4 @@
-Welcome to Gerapy's Documentation!
+Welcome to YesCaptcha Python SDK's Documentation!
 =======================================
 
 .. toctree::
@@ -7,7 +7,5 @@ Welcome to Gerapy's Documentation!
    Introduction<introduction>
    Installation<installation>
    Usage<usage>
-   Docker<docker>
-   Contributing<contributing>
    Maintainers<maintainers>
    License<license>

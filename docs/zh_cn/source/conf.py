@@ -16,12 +16,12 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'Gerapy'
-copyright = '2019, Germey'
+project = 'YesCaptcha'
+copyright = '2022, Germey'
 author = 'Germey'
 
 # The full version, including alpha/beta/rc tags
-release = '0.9.3'
+release = '0.1.0'
 
 # -- General configuration ---------------------------------------------------
 

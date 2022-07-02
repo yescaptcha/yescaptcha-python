@@ -15,8 +15,3 @@ make html
 ```
 
 Then built files will appear in a folder named build.
-
-# Preview
-
-Documents are available at [https://docs.gerapy.com](https://docs.gerapy.com).
-

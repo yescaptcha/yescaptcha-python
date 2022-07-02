@@ -1,174 +1,138 @@
 # Usage
 
-This article focuses on the basic use of Gerapy and hopes to provide some help for you who are using Gerapy.
+This document describes the basic usage of YesCaptcha SDK.
 
-## Initialization
+## Preconditions
 
-First you can create a new project with the gerapy command. The command is as follows:
+Before using, please go to [https://yescaptcha.com/](https://yescaptcha.com/) official website to register an account, and obtain the account key ClientKey, as shown in the figure:
 
-```
-gerapy init
-```
+![](https://qiniu.cuiqingcai.com/d2h50.png)
 
-This will generate a gerapy folder in the current directory. This gerapy folder is the working directory of Gerapy. When you enter the gerapy folder, you will find two folders:
+## All task types
 
-* projects , which are used to store Scrapy crawler projects.
-* logs, used to store the Gerapy run log.
+YesCaptcha provides a variety of verification code recognition services, each service corresponds to a task, all task types refer to [official document](https://yescaptcha.atlassian.net/wiki/spaces/YESCAPTCHA/pages/164286).
 
-If you want to change the name of the working directory, you can add the name of the working directory after the command. If you want to create a working directory named GerapySpace, you can create it with the following command:
+This Python SDK provides the encapsulation of various tasks, making it easier for developers to interface with YesCaptcha services, instead of using libraries such as requests for development from 0.
 
-```
-gerapy init GerapySpace
-```
+## Basic usage
 
-Its internal structure is the same.
+Here we take the GoogleCaptchaV2 verification code as an example, the sample address is [https://www.google.com/recaptcha/api2/demo](https://www.google.com/recaptcha/api2/demo), the specific For usage instructions, see [NoCaptchaTaskProxyless : reCaptcha V2 protocol interface](https://yescaptcha.atlassian.net/wiki/spaces/YESCAPTCHA/pages/229796/NoCaptchaTaskProxyless+reCaptcha+V2).
 
-## Database Configuration
+The sample code is as follows:
 
-Gerapy uses the database to store various project configurations, timing tasks, etc., so the second step is to initialize the database.
+```python
+from yescaptcha.task import NoCaptchaTaskProxyless
+from yescaptcha.client import Client
 
-First enter the working directory, for example, the working directory name is gerapy, execute the following command:
+CLIENT_KEY = <YOUR_CLIENT_KEY>
+website_url = 'https://www.google.com/recaptcha/api2/demo'
+website_key = '6Le-wvkSAAAAAPBMRTvw0Q4Muexq9bi0DJwx_mJ-'
 
-```
-cd gerapy
-```
-
-At this point, first initialize the database, execute the following command:
-
-```
-gerapy migrate
+client = Client(client_key=CLIENT_KEY, debug=True)
+task = NoCaptchaTaskProxyless(website_key=website_key, website_url=website_url)
+job = client.create_task(task)
+print('result', job.get_solution())
 ```
 
-This will generate a SQLite database, which will be used to save each host configuration information, deployment version, timing tasks, and so on.
+First, we need to introduce the `Client` class to initialize an operation object of the YesCaptcha service. At this time, we need to pass in the `client_key`, which is the account key ClientKey described above. In addition, we can pass in the `debug` parameter, Set the debug mode so that more debug information can be output during operation.
 
-At this time, you can find another folder in the working directory:
+In addition, the `NoCaptchaTaskProxyless` class needs to be introduced. The name of the class is equivalent to the type mentioned in the document, as shown in the figure:
 
-* dbs, which is used to store the database required by the Gerapy runtime.
+![](https://qiniu.cuiqingcai.com/67cfb.png)
 
-## New User
+In addition, reading the documentation we can find that this category of Task requires two parameters `websiteURL` and `websiteKey`, as shown:
 
-Gerapy has login authentication turned on by default, so you need to set up an admin user before starting the service.
+![](https://qiniu.cuiqingcai.com/ldq5d.png)
 
-For convenience, you can quickly create an admin administrator by directly using the command of the initial administrator. The password is also admin. The command is as follows:
+Therefore, when initializing the `NoCaptchaTaskProxyless` class, we need to pass in the corresponding two parameters, the parameters need to be converted to [Snake nomenclature](https://en.wikipedia.org/wiki/Snake_case), the difference between word and word need to be separated by an underscore, that is, converted to `website_url` and `website_key`.
 
-```
-gerapy initadmin
-```
+Next, we can use the `create_task` method of the client object to create a task whose return value is named `job`, and finally, we call the `get_solution` method to get the corresponding result.
 
-If you do not want to create the admin user directly, you can also manually create an administrator user with the following command:
+The results are as follows:
 
 ```
-gerapy createsuperuser
+2022-07-02 14:30:38.124 | DEBUG | yescaptcha.client:create_task:61 - construct result {'clientKey': '50a07aa563cf4688270a6a968086c80b4ef23baf78', 'task': {'type': 'NoCaptchaTaskProxyless', 'websiteURL': ' https://www.google.com/recaptcha/api2/demo', 'websiteKey': '6Le-wvkSAAAAAPBMRTvw0Q4Muexq9bi0DJwx_mJ-'}}
+2022-07-02 14:30:39.435 | DEBUG | yescaptcha.job:_update:34 - try to get result of task 7cf17d74-f9d0-11ec-b008-ae8dd81878b9
+2022-07-02 14:30:40.527 | DEBUG | yescaptcha.job:_update:36 - task result {'errorId': 0, 'errorCode': '', 'errorDescription': None, 'status': 'processing' , 'solution': None}
+2022-07-02 14:30:41.528 | DEBUG | yescaptcha.job:_update:34 - try to get result of task 7cf17d74-f9d0-11ec-b008-ae8dd81878b9
+
+2022-07-02 14:31:36.359 | DEBUG | yescaptcha.job:_update:36 - task result {'errorId': 0, 'errorCode': None, 'errorDescription': None, 'solution': {'gRecaptchaResponse' : '03AGdBq27gCf7UkBFO7Nsl5OqK6kiL911UYPYSyrbbYh9jQfvzp1qrsehq62UKgJ...2SNtTnWFJJ8TkXJs4AHIceSmE-JR8BSs_m--Qf5MtySwRPZnYewbKBOSOSHBCQarMPBFUj-dscgbI8rlfIpbG0hbgrF-MDJ3aHI6ZdgrahHtlRpB6PWDdWCXX1S1w'}
+result 03AGdBq27gCf7UkBFO7Nsl5OqK6kiL911UYPYSyrbbYh9jQfvzp1qrsehq62UKgJB9s9x5bKk2pEg392DYy3HVTo1KbdBywk7UQK3RDcM1A4bGPByrCO0xlgMyX4GzDqvx...HBCQarMPBFUj-dscgbI8rlfIpbG0hbgrF-MDJ3aHI6ZdgrahHtlRpB6PWDdWCXX1S1w
 ```
 
-At this point Gerapy will prompt us to enter the username, email, password, etc., and then log in to Gerapy with this user.
+## other tasks
 
-## Startup service
+For other tasks, the usage method is similar, we only need to refer to the document and introduce the corresponding Task object, for example, for [ReCaptchaV2Classification: reCaptcha V2 Image Recognition](https://yescaptcha.atlassian.net/wiki/spaces/YESCAPTCHA /pages/18055169/ReCaptchaV2Classification+reCaptcha+V2), all we need to introduce is:
 
-Next start the Gerapy service, the command is as follows:
-
-```
-gerapy runserver
+```python
+from yescaptcha.task import ReCaptchaV2Classification
 ```
 
-This will open the Gerapy service on the default 8000 port.
-
-At this time, open [http://localhost:8000](http://localhost:8000) in the browser to enter Gerapy.
-
-First Gerapy will prompt the user to log in, the page is as follows:
-
-![](https://qiniu.cuiqingcai.com/2019-11-23-040248.png)
-
-Enter Gerapy's home page by entering the username and password you created in the previous step:
-
-![](https://qiniu.cuiqingcai.com/2019-11-23-065223.png)
-
-If you want Gerapy run in public, you can specify host and port like this:
+When creating a Task, also refer to the parameter description of the documentation:
 
 ```
-gerapy runserver 0.0.0.0:8000
+task = ReCaptchaV2Classification(image='<image payload>', question='<question>')
 ```
 
-Then Gerapy can be accessed through 8000 port from public.
+The image here is the Base64 encoded image, do not include "data:image/\*\*\*;base64,", the question parameter is the question ID, please check the table, start with /m/.
 
-If you want Gerapy run in daemon, you can just run like this:
+The final call is the same:
 
+```python
+job = client.create_task(task)
+print('result', job.get_solution())
 ```
-gerapy runserver 0.0.0.0:8000 > /dev/null 2>&1 &
+
+## async tasks
+
+For some tasks, the recognition result of the verification code will not be returned immediately, but a processing process is required, such as tasks such as NoCaptchaTaskProxyless and RecaptchaV3TaskProxyless. For some image recognition tasks, the recognition process will be synchronous, such as ReCaptchaV2Classification, HCaptchaClassification and other tasks.
+
+In order to facilitate the development of developers, for asynchronous tasks, this SDK does automatic waiting processing, that is, it will automatically poll and wait until the recognition result is returned. The reason is that when initializing the Client object, there is a default parameter `auto_join` that is True .
+
+Therefore, if you do not want to enable automatic waiting, you can handle this process manually. In this case, you need to set `auto_join` to False when initializing the Client object, and then call the `join` method of the `job` object when appropriate. as follows:
+
+```python
+from yescaptcha.task import NoCaptchaTaskProxyless
+from yescaptcha.client import Client
+
+CLIENT_KEY = <YOUR_CLIENT_KEY>
+website_url = 'https://www.google.com/recaptcha/api2/demo'
+website_key = '6Le-wvkSAAAAAPBMRTvw0Q4Muexq9bi0DJwx_mJ-'
+
+client = Client(client_key=CLIENT_KEY, auto_join=False)
+task = NoCaptchaTaskProxyless(website_key=website_key, website_url=website_url)
+job = client.create_task(task)
+job.join()
+print('result', job.get_solution())
 ```
 
-Then Gerapy will run in daemon and in public.
+## non-task interface
 
-## Host Management
+In addition, this SDK also provides some interfaces that are not identified by verification codes, such as obtaining account information, obtaining developer ID, etc., which are listed as follows:
 
-Here the host is talking about Scrapyd's service host. Scrapyd will run on port 6800 by default. It provides a series of HTTP services such as deployment and operation. For Scrapyd, you can refer to [Scrapyd Document](https://scrapyd.readthedocs.io/ ) to ensure that their services can be accessed externally.
+- get_balance: Get account balance
+- get_soft_id: Get the developer ID
 
-In host management, we can add the Scrapyd running address and port of each host and name it. After adding it, it will appear in the host list. Gerapy will monitor the running status of each host and identify it in different states:
+For example, for get_soft_id, the usage is as follows:
 
-![](https://qiniu.cuiqingcai.com/2019-11-23-070132.png)
+```python
+from yescaptcha.client import Client
 
-Once added, we can easily view and control the crawler tasks that each host is running.
+CLIENT_KEY = <YOUR_CLIENT_KEY>
+client = Client(client_key=CLIENT_KEY)
+soft_id = client.get_soft_id()
+print('result', soft_id)
+```
 
-## Project management
+## Node settings
 
-Also mentioned above is an empty projects folder in Gerapy's working directory, which is the folder where the Scrapy directory is stored.
+There are two service nodes behind the YesCaptcha service, one is an international node (default), but there may be problems accessing it in China, so for users in China, you can set up a dedicated Chinese node.
 
-If we want to deploy a Scrapy project, just put the project file in the projects folder.
+When setting, you only need to change the initialization parameter `region` of the Client object:
 
-For example, you can put your project into the projects folder as follows:
+```python
+from yescaptcha.client import Client, Region
 
-* Move or copy the local Scrapy project directly to the projects folder.
-* Clone or download a remote project, such as Git Clone, and download the project to the projects folder.
-* Link the project to the projects folder via a soft connection (using the ln command under Linux, Mac, using the mklink command).
-
-For example, put two Scrapy projects in the projects here:
-
-![](https://qiniu.cuiqingcai.com/2019-11-23-043941.png)
-
-Then go back to the Gerapy management interface and click on Project Management to see the current project list:
-
-![](https://qiniu.cuiqingcai.com/2019-11-23-070213.png)
-
-Since the project has a package and deployment record here, it is shown separately here.
-
-In addition, Gerapy provides the project online editing function, we can edit the project visually by clicking Edit:
-
-![](https://qiniu.cuiqingcai.com/2019-11-23-070248.png)
-
-If the project has no problems, you can click on the deployment to package and deploy. You need to package the project before deployment. You can specify the version description when packaging:
-
-![](https://qiniu.cuiqingcai.com/2019-11-23-070321.png)
-
-After the package is complete, you can click the deployment button to deploy the packaged Scrapy project to the corresponding cloud host, and you can also deploy it in batches.
-
-![](https://qiniu.cuiqingcai.com/2019-11-23-070339.png)
-
-After the deployment is complete, you can go back to the host management page to schedule the task. Click Schedule to view the task management page. You can view the running status of all tasks on the current host:
-
-![](https://qiniu.cuiqingcai.com/2019-11-23-070453.png)
-
-We can start and stop the task by clicking the button such as run, stop, etc., and also can view the log details by expanding the task entry.
-
-This way we can see the status of each task in real time.
-
-## Timing tasks
-
-In addition, Gerapy supports setting up scheduled tasks, entering the Task Management page, and creating a new scheduled task, such as creating a new crontab mode, which runs every minute:
-
-![](https://qiniu.cuiqingcai.com/2019-11-23-144227.png)
-
-Here, if you set the run every minute, you can set the "minute" to 1, and you can set the start date and end date.
-
-After the creation is complete, return to the Task Management home page to see the list of scheduled tasks that have been created:
-
-![](https://qiniu.cuiqingcai.com/2019-11-23-070627.png)
-
-Click "Status" to view the running status of the current task:
-
-![](https://qiniu.cuiqingcai.com/2019-11-23-070716.png)
-
-You can also manually control scheduled tasks and view the run log by clicking the Schedule button in the upper right corner.
-
-The above is the basic usage of Gerapy.
-
-If you have found an error, or if you have any suggestions for Gerapy, please feel free to post it to [Gerapy Issues](https://github.com/Gerapy/Gerapy/issues) and thank you for your support. Your feedback and suggestions are invaluable and hope that your participation will help Gerapy do better.
+CLIENT_KEY = <YOUR_CLIENT_KEY>
+client = Client(client_key=CLIENT_KEY, region=Region.CHINA)
+```
